@@ -74,10 +74,10 @@
             <div id="recaptcha-container" class="my-2" style="width:100px;"></div>
             <button class="btn" type="button" id="generateOTP">Request OTP</button>
             <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Enter OTP">
+                <input type="text" class="form-control" id="userotp" placeholder="Enter OTP">
                 <label for="floatingPassword">Enter OTP</label>
             </div>
-            <button class="w-100 btn btn-lg btn-primary" type="submit">Verify</button>
+            <button class="w-100 btn btn-lg btn-primary" id="verifyOTP" type="button">Verify</button>
         </form>
       </main>
     </body>
@@ -108,20 +108,35 @@
       }
 
       $("#generateOTP").click(function() {
-        console.log("Generate OTP clicked");
+        console.log("Requesting OTP");
         if (!(grecaptcha && grecaptcha.getResponse().length !== 0)) {
           alert('Please tick the reCAPTCHA checkbox to proceed');
           return;
         }
         var full_number = $('#full_number').val();
-        console.log(full_number);
+        console.log("Generating OTP for " + full_number);
         firebase.auth().signInWithPhoneNumber(full_number, window.recaptchaVerifier).then(function(confirmationResult) {
           window.confirmationResult = confirmationResult;
           coderesult = confirmationResult;
-          console.log("Firebase otp requesting result");
+          console.log("Firebase OTP generated");
           console.log(coderesult);
         }).catch(function(error) {
           console.log(error);
+        })
+      })
+    
+      $("#verifyOTP").click(function() {
+        console.log("Verifing OTP");
+        var userotp = $("#userotp").val()
+        console.log("User entered OTP = " + userotp);
+        coderesult.confirm(userotp).then(function(result) {
+          var user = result.user;
+          if(user){
+            console.log("OTP verification success");
+            window.location = "http://localhost:3000/success";
+          }
+        }).catch(function(error) {
+          console.log("OTP Verification failed");
         })
       })
     </script>
