@@ -126,6 +126,7 @@
       })
     
       $("#verifyOTP").click(function() {
+        console.log(window.location.origin);
         console.log("Verifing OTP");
         var userotp = $("#userotp").val()
         console.log("User entered OTP = " + userotp);
@@ -133,7 +134,7 @@
           var user = result.user;
           if(user){
             console.log("OTP verification success");
-            window.location = "http://localhost:3000/success";
+            window.location = window.location.origin+"/success";
           }
         }).catch(function(error) {
           console.log("OTP Verification failed");
