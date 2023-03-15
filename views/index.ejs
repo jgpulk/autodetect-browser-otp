@@ -64,11 +64,11 @@
     <body class="text-center">
       <main class="form-signin">
         <form>
-            <img class="mb-4" src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+            <img class="mb-4" src="https://img.freepik.com/free-vector/login-concept-illustration_114360-739.jpg?w=2000" alt="" width="72" height="57">
             <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
             <div class="form-floating">
-                <input type="phone" class="form-control" id="full_number" placeholder="Enter phone number" value="+919947833189">
+                <input type="phone" class="form-control" id="full_number" placeholder="Enter phone number" value="+916282053540">
                 <label for="floatingInput">Enter phone number</label>
             </div>
             <div id="recaptcha-container" class="my-2" style="width:100px;"></div>
@@ -140,5 +140,32 @@
           console.log("OTP Verification failed");
         })
       })
+    </script>
+
+    <script>
+      if ('OTPCredential' in window) {
+        console.log("OTPCredential loaded");
+        window.addEventListener('DOMContentLoaded', e => {
+        const input = document.querySelector('input[autocomplete="one-time-code"]');
+        if (!input) return;
+        const ac = new AbortController();
+        const form = input.closest('form');
+        if (form) {
+          form.addEventListener('submit', e => {
+            ac.abort();
+          });
+        }
+        navigator.credentials.get({
+          otp: { transport:['sms'] },
+          signal: ac.signal
+        }).then(otp => {
+          console.log(otp);
+          input.value = otp.code;
+          // if (form) form.submit();
+        }).catch(err => {
+          console.log(err);
+        });
+      });
+    }
     </script>
 </html>
